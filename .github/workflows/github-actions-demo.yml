@@ -1,29 +1,28 @@
-name: Retrieve Modified Files on Push
+name: Test
 
-on: [push]
+on: push
 
 jobs:
-  retrieve-modified-files:
+  test:
     runs-on: ubuntu-latest
-    
     steps:
-      - name: Check out code
-        uses: actions/checkout@v2
-        
-      - name: Get list of modified files
-        id: modified-files
+      - uses: actions/checkout@v2.1.0
+      - uses: jitterbit/get-changed-files@v1
+        id: abc
+        with:
+          format: space-delimited
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Printing
         run: |
-          # Get the list of files changed in the push
-          files=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
-          
-          # Set the output variable to be used in later steps
-          echo "::set-output name=modified_files::$files"
-          
-      - name: Print modified files
-        run: |
-          # Get the output variable from the previous step
-          modified_files="${{ steps.modified-files.outputs.modified_files }}"
-          
-          # Print the list of modified files
-          echo "Modified files:"
-          echo "$modified_files"
+          echo "All:"
+          echo "${{ steps.abc.outputs.all }}"
+          echo "Added:"
+          echo "${{ steps.abc.outputs.added }}"
+          echo "Removed:"
+          echo "${{ steps.abc.outputs.removed }}"
+          echo "Renamed:"
+          echo "${{ steps.abc.outputs.renamed }}"
+          echo "Modified:"
+          echo "${{ steps.abc.outputs.modified }}"
+          echo "Added+Modified:"
+          echo "${{ steps.abc.outputs.added_modified }}"
