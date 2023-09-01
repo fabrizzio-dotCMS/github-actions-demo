@@ -1,4 +1,4 @@
-name: Test
+name: GHA - Capabilities Test
 
 on: push
 
@@ -39,4 +39,10 @@ jobs:
             echo "Base Ref: ${{ github.base_ref }}"
             echo "Triggered by: ${{ github.actor }}"
             echo "Workflow: ${{ github.workflow }}"
-            echo "PR: ${{ github.pull_request }}"            
+            echo "PR: ${{ github.pull_request }}"
+
+      - name: Start Docker Compose
+        uses: docker/compose-action@v1
+        with:
+          compose-file: ./docker-compose.yml  
+          services: dotcms-receiver
