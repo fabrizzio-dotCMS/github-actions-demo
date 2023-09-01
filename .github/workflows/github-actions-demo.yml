@@ -1,4 +1,4 @@
-name: GHA - Capabilities Test
+name: GHA Capabilities
 
 on: push
 
@@ -43,7 +43,7 @@ jobs:
 
 
       - name: Start containers
-        run: docker-compose -f "docker-compose.yml" up -d --build
+        run: docker-compose -f "docker-compose.yml" up 
 
 
       - name: Stop containers
