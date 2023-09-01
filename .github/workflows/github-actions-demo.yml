@@ -41,8 +41,11 @@ jobs:
             echo "Workflow: ${{ github.workflow }}"
             echo "PR: ${{ github.pull_request }}"
 
-      - name: Start Docker Compose
-        uses: docker/compose-action@v1
-        with:
-          compose-file: ./docker-compose.yml  
-          services: dotcms-receiver
+
+      - name: Start containers
+        run: docker-compose -f "docker-compose.yml" up -d --build
+
+
+      - name: Stop containers
+        if: always()
+        run: docker-compose -f "docker-compose.yml" down  
