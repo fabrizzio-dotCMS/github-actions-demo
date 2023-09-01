@@ -6,11 +6,30 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3      
-        id: lol
+      - name: Checkout 
+        uses: actions/checkout@v3      
+        id: changed-files
         with:
            fetch-depth: 0
-      - name: Get changes
+
+      - name: Print a message
         run: |
-         git diff --name-only ${{ github.event.before }} ${{ github.event.after }}
-          
+         echo "This is a simple message."
+         echo "You can print information like this."
+
+      - name: Get changes
+        id: changed-files
+        run: |
+          echo "changed_files=$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | xargs)" >> $GITHUB_OUTPUT
+
+      - name: List changed files
+        run: |
+            for file in ${{ steps.changed-files.outputs.changed_files }}; do
+                echo "$file was changed"
+            done    
+
+      - name: Iterate GitHub Context Properties
+        run: |
+          for property in $(echo "${!github[@]}"); do
+            echo "$property: ${github[$property]}"
+          done    
